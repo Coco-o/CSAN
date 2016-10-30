@@ -27,7 +27,6 @@ def kmm(x_tr, x_te, kf=lambda (x,y,kfargs): np.dot(x, y), kfargs=None, B=1):
     Reference:
     Gretton et al, Covariate Shift by Kernel Mean Matching, 2009, http://www.gatsby.ucl.ac.uk/~gretton/papers/covariateShiftChapter.pdf
     """
-    # TODO: Implement kmm with Frank-Wolfe
     ntr = len(x_tr)
     nte = len(x_te)
     epsilon = B / np.sqrt(ntr)

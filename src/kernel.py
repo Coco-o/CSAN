@@ -12,4 +12,4 @@ def rbf(x1, x2, sigma=1):
     rbf kernel. sigma is the smoothing parameter
     k(x1, x2) = exp(-||x1 - x2||^2 / 2 * sigma^2)
     """
-    return np.exp(-(x1 - x2)**2 / (2 * sigma**2))
+    return np.exp(-(np.linalg.norm(x1 - x2) / (2 * sigma**2)))

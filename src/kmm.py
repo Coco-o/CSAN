@@ -30,6 +30,7 @@ def kmm(x_tr, x_te, kf=lambda (x,y,kfargs): np.dot(x, y), kfargs=None, B=1):
     ntr = len(x_tr)
     nte = len(x_te)
     epsilon = B / np.sqrt(ntr)
+    print 'computing kernel matrix for kmm'
     K = matrix(kernel_matrix(x_tr, x_tr, kf, kfargs))
     kappa = matrix(ntr / nte * np.sum(kernel_matrix(x_tr, x_te, kf, kfargs), axis=1))
     G = matrix(np.r_[np.eye(ntr), -np.eye(ntr), np.ones([1, ntr]), -np.ones([1, ntr])])
@@ -45,10 +46,13 @@ def kernel_matrix(x1, x2, kf, kfargs):
     l1 = len(x1)
     l2 = len(x2)
     K = np.zeros([l1, l2])
+    n_batch = l1 * l2 / 100
+    idx = 0
     for i in range(l1):
         for j in range(l2):
-            #if (j < i):
-            #    K[i][j] = K[j][i]
-            #else:
             K[i][j] = kf(x1[i], x2[j], *kfargs)
+            idx += 1
+            if (idx == n_batch):
+                print '.'
+                idx = 0
     return K

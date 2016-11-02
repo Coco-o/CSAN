@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 from cvxopt import matrix, solvers
 
 """
@@ -30,7 +31,9 @@ def kmm(x_tr, x_te, kf=lambda (x,y,kfargs): np.dot(x, y), kfargs=None, B=1):
     ntr = len(x_tr)
     nte = len(x_te)
     epsilon = B / np.sqrt(ntr)
-    print 'computing kernel matrix for kmm'
+    #print 'computing kernel matrix for kmm'
+    sys.stdout.write('computing kernel matrix for kmm')
+    sys.stdout.flush()
     K = matrix(kernel_matrix(x_tr, x_tr, kf, kfargs))
     kappa = matrix(ntr / nte * np.sum(kernel_matrix(x_tr, x_te, kf, kfargs), axis=1))
     G = matrix(np.r_[np.eye(ntr), -np.eye(ntr), np.ones([1, ntr]), -np.ones([1, ntr])])
@@ -53,6 +56,8 @@ def kernel_matrix(x1, x2, kf, kfargs):
             K[i][j] = kf(x1[i], x2[j], *kfargs)
             idx += 1
             if (idx == n_batch):
-                print '.'
+                #print '.'
+                sys.stdout.write('.')
+                sys.stdout.flush()
                 idx = 0
     return K

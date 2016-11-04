@@ -23,7 +23,7 @@ if __name__ == '__main__':
     [xtr, ytr] = [np.array(xtr)[idx_tr], np.array(ytr)[idx_tr]]
     [xte, yte] = [np.array(xte), np.array(yte)]
 
-    coef = kmm_train(xtr, xte, yte, test_labels, kernel.rbf, (15, ), 10)
+    coef = kmm_train(xtr, xte, yte, test_labels, kernel.rbf, (25, ), 10)
 
     score = np.zeros([10, 1])
     for i in range(10):

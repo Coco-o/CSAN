@@ -11,4 +11,5 @@ if __name__ == '__main__':
     plt.scatter(xtr, ytr, color='black', marker='x')
     plt.scatter(xte, yte, color='red')
     plt.scatter(xtr, ytr, color='green', s=coef*100, alpha=0.5)
+    plt.legend(('training', 'testing', 'weighted training'))
     plt.show()

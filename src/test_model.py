@@ -3,6 +3,7 @@ from __future__ import print_function
 import numpy as np
 from model import AdvSampler
 import matplotlib.pyplot as plt
+import gen_synthetic
 
 def poly_gaussian(n_tr, n_te):
     """
@@ -16,6 +17,10 @@ def poly_gaussian(n_tr, n_te):
     return x_tr, y_tr, x_te, y_te
 
 def poly_uniform(n_tr, n_te):
+    """
+    Generate training and testing data with covariate shift from a non-linear model f(x) = x^3 - x + 1 + epsilon,
+    where x_tr ~ Uniform(-1.5, 1.5) and x_te ~ Uniform(-0.5, 0.5), and epsilon ~ N(0, 0.01)
+    """
     x_tr = np.random.uniform(-1.5, 1.5, (n_tr, 1))
     x_te = np.random.uniform(-0.5, 0.5, (n_te, 1))
     y_tr = x_tr ** 3 - x_tr + 1 + np.random.randn(n_tr, 1) * 0.1
@@ -48,7 +53,7 @@ model_parameter = {
 
 if __name__ == '__main__':
     np.random.seed(0)
-    x_tr, y_tr, x_te, y_te = poly_uniform(700, 200)
+    x_tr, y_tr, x_te, y_te = gen_synthetic.poly_uniform(700, 200)
     sampler = AdvSampler(model_parameter)
     step_num = 100
     sampler.train(x_tr, x_te, step_num)
@@ -59,6 +64,10 @@ if __name__ == '__main__':
     plt.scatter(x_tr, y_tr, color='black', marker='x')
     plt.scatter(x_te, y_te, color='red')
     plt.scatter(x_tr, y_tr, color='green', s=res.flatten()*100, alpha=0.5)
+    ylim = plt.gca().get_ylim()
+    plt.vlines(x_tr, ylim[0], res.flatten()/res.max() + ylim[0], color='m')
+    plt.gca().set_ylim(ylim)
+    plt.legend(('training', 'testing', 'weighted training', 'weights'))
     plt.show()
     plt.clf()
 

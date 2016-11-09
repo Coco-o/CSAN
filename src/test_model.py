@@ -3,6 +3,7 @@ from __future__ import print_function
 import numpy as np
 from model import AdvSampler
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 import gen_synthetic
 
 def poly_gaussian(n_tr, n_te):
@@ -59,15 +60,20 @@ if __name__ == '__main__':
     sampler.train(x_tr, x_te, step_num)
 
     res = sampler.get_result(x_tr, 'sampler')
-    #plt.figure()
-    #plt.hold(True)
-    plt.scatter(x_tr, y_tr, color='black', marker='x')
-    plt.scatter(x_te, y_te, color='red')
-    plt.scatter(x_tr, y_tr, color='green', s=res.flatten()*100, alpha=0.5)
-    ylim = plt.gca().get_ylim()
-    plt.vlines(x_tr, ylim[0], res.flatten()/res.max() + ylim[0], color='m')
-    plt.gca().set_ylim(ylim)
-    plt.legend(('training', 'testing', 'weighted training', 'weights'))
+
+    gs = gridspec.GridSpec(2, 1, height_ratios=[3,1])
+    ax1 = plt.subplot(gs[0])
+    ax2 = plt.subplot(gs[1])
+    ax1.hold(True)
+    ax1.scatter(x_tr, y_tr, color='black', marker='x')
+    ax1.scatter(x_te, y_te, color='red')
+    ax1.scatter(x_tr, y_tr, color='green', s=res.flatten()*100, alpha=0.5)
+    ax1.legend(('training', 'testing', 'weighted training'))
+    xlim = ax1.get_xlim()
+    ax2.vlines(x_tr, 0, res.flatten()/res.max(), color='m')
+    ax2.set_xlim(xlim)
+    ax2.legend(('weights',), loc='best')
+
     plt.show()
     plt.clf()
 

@@ -8,22 +8,23 @@ import matplotlib.image as mpimg
 from model import AdvSampler, WeightedLR
 import kernel, kmm
 import matplotlib.gridspec as gridspec
-
+from mnist import MNIST
 
 dim = 784
 ns, nt = 500, 500 # samples per digit
 s_digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-t_digits = [3, 4]
+t_digits = [0]
 ks = len(s_digits)
 kt = len(t_digits)
-'''
 # load data, 50000, 10000, 10000
-print('Loading data ...',)
-data_path = '../datasets/mnist/'
-x_train = np.genfromtxt(data_path+'train_full.images', delimiter=' ')/255
-y_train = np.genfromtxt(data_path+'train_full.labels', delimiter=' ').astype(int)
-x_test = np.genfromtxt(data_path+'test_full.images', delimiter=' ')/255
-y_test = np.genfromtxt(data_path+'test_full.labels', delimiter=' ').astype(int)
+data_path = '../python-mnist/'
+mndata = MNIST(data_path)
+x_train, y_train = mndata.load_training()
+x_test, y_test = mndata.load_testing()
+x_train = np.array(x_train) / 255.0
+y_train = np.array(y_train)
+x_test = np.array(x_test) / 255.0
+y_test = np.array(y_test)
 print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 idx = np.random.permutation(x_train.shape[0])
 x_train_old, y_train_old = x_train[idx, :], y_train[idx]
@@ -58,30 +59,29 @@ for i in range(ks):
 
 for i in range(kt):
     d = t_digits[i]
-    xt[nt*i:nt*(i+1),:] = train_collection[d][:nt,:]
+    xt[nt*i:nt*(i+1),:] = test_collection[d][:nt,:]
     yt[nt*i:nt*(i+1)] = 1
 
 
-
-for i in range(10):
-    print(xs.shape, xt.shape)
-    j = np.random.randint(0,xs.shape[0])
-    print(ys[j])
-    plt.imshow(np.reshape(xs[j,:],(28,28)), cmap='gray', interpolation='none')
-    plt.show()
-
-    j = np.random.randint(0,xt.shape[0])
-    print(yt[j])
-    plt.imshow(np.reshape(xt[j,:],(28,28)), cmap='gray', interpolation='none')
-    plt.show()
+#for i in range(10):
+#    print(xs.shape, xt.shape)
+#    j = np.random.randint(0,xs.shape[0])
+#    print(ys[j])
+#    plt.imshow(np.reshape(xs[j,:],(28,28)), cmap='gray', interpolation='none')
+#    plt.show()
+#
+#    j = np.random.randint(0,xt.shape[0])
+#    print(yt[j])
+#    plt.imshow(np.reshape(xt[j,:],(28,28)), cmap='gray', interpolation='none')
+#    plt.show()
 
 #write data
 np.savetxt('data/xs0.csv', xs, delimiter=',', fmt='%.4f')
 np.savetxt('data/ys0.csv', ys, delimiter=',', fmt='%d')
 np.savetxt('data/xt0.csv', xt, delimiter=',', fmt='%.4f')
 np.savetxt('data/yt0.csv', yt, delimiter=',', fmt='%d')
-'''
 
+print('Loading data ...',)
 # load saved data:
 xs = np.genfromtxt('data/xs0.csv', delimiter=',')
 ys = np.genfromtxt('data/ys0.csv', delimiter=',')
@@ -145,9 +145,10 @@ if __name__ == '__main__':
     res = sampler.get_result(xs, 'sampler')
     for i in range(10):
         print(np.sum(res[i*ns:i*ns+ns,:]>0.5)/ns)
-
-
-
+        ys[i*ns:i*ns+ns] = i
+    plt.scatter(ys, res)
+    plt.savefig('figs/mnist.png')
+    plt.show()
 
 '''
     model_parameter['coeff'] = 0.0

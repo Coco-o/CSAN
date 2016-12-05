@@ -97,7 +97,7 @@ model_parameter = {
 
 if __name__ == '__main__':
 
-    np.random.seed(0)
+    np.random.seed(1)
     x_tr, y_tr, x_te, y_te = poly_uniform(300, 100)
     step_num = 25
     lr_rate = 0.1

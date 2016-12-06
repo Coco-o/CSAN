@@ -114,7 +114,7 @@ class WeightedBinaryNN(object):
         y_pred = sigmoid(np.dot(layer_inputs[-1], W.T) + np.tile(b, (batch_size, 1)))
         # back propagation:
         # only the starting gradient is different from the stantard cross_entropy minimization
-        pre_activation_grad = sigmoid_grad(y_pred) * pred_grad
+        pre_activation_grad = sigmoid_grad(y_pred) * pred_grad / x.shape[0] # normalize
         W_grad = np.dot(pre_activation_grad.T, layer_inputs[-1]) + self.weight_decay * self.weights[-1]
         b_grad = np.sum(pre_activation_grad, 0)
         post_activation_grad = np.dot(pre_activation_grad, self.weights[-1])

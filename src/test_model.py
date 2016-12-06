@@ -1,10 +1,10 @@
 from __future__ import division
 from __future__ import print_function
 import numpy as np
-#import matplotlib # comment these two lines if running remotely
-#matplotlib.use('Agg')
+import matplotlib # comment these two lines if running remotely
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from model import AdvSampler, WeightedLR
+from model2 import AdvSampler, WeightedLR
 import kernel, kmm
 import matplotlib.gridspec as gridspec
 
@@ -104,17 +104,17 @@ if __name__ == '__main__':
 
     sampler = AdvSampler(model_parameter)
     log = sampler.train(x_tr, x_te, step_num)
-    plot_log(log, 'figs/syn_loss.pdf')
+    plot_log(log, 'figs_new/syn_loss.pdf')
     res1 = sampler.get_result(x_tr, 'sampler')
     lr = WeightedLR(dim)
     lr.train(x_tr, y_tr, res1, lr_rate)
     lr_loss = lr.get_loss(x_te, y_te, np.ones_like(y_te))
     print(lr_loss)
-    plot_weights(x_tr, y_tr, x_te, y_te, res1.flatten(), lr, 'figs/syn1.pdf')
+    plot_weights(x_tr, y_tr, x_te, y_te, res1.flatten(), lr, 'figs_new/syn1.pdf')
 
 
 
-
+    '''
     model_parameter['coeff'] = 0.0
     sampler = AdvSampler(model_parameter)
     sampler.train(x_tr, x_te, step_num)
@@ -134,3 +134,4 @@ if __name__ == '__main__':
     lr_loss = lr.get_loss(x_te, y_te, np.ones_like(y_te))
     print(lr_loss)
     plot_weights(x_tr, y_tr, x_te, y_te, coef, lr, 'figs/syn3.pdf')
+    '''

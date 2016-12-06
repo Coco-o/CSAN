@@ -5,7 +5,7 @@ from util import *
 from classifiers import WeightedBinaryNN
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-from model import AdvSampler, WeightedLR
+from model2 import AdvSampler, WeightedLR
 import kernel, kmm
 import matplotlib.gridspec as gridspec
 
@@ -115,14 +115,14 @@ model_parameter = {
     'adv_acc_parameter': parameter2,
     'adv_rej_parameter': parameter3,
     'adv_acc_step_num': 1, #if using sgd, set this smaller
-    'adv_acc_learning_rate': 0.1,
+    'adv_acc_learning_rate': 0.01,
     'adv_rej_step_num': 1, #if using sgd, set this smaller
-    'adv_rej_learning_rate': 0.1,
-    'sampler_step_num': 20,
+    'adv_rej_learning_rate': 0.01,
+    'sampler_step_num': 1,
     'sampler_learning_rate': 0.01,
     'coeff': 1.0,
     'sgd': True,
-    'sampler_batch_size': 0.02 #proportion of data_size, 1 means batch training
+    'sampler_batch_size': 1.0/xs.shape[0] #proportion of data_size, 1 means batch training
 }
 
 
@@ -130,7 +130,7 @@ if __name__ == '__main__':
 
     np.random.seed(0)
 
-    step_num = 5
+    step_num = 10
 
     '''
     res3 = np.array(kmm.kmm(xs, xt, kernel.polykernel, kfargs=(1,2 ), B=10)['x']).reshape((ns*10, 1))

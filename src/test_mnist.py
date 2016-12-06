@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     np.random.seed(0)
 
-    step_num = 10
+    step_num = 20
 
     '''
     res3 = np.array(kmm.kmm(xs, xt, kernel.polykernel, kfargs=(1,2 ), B=10)['x']).reshape((ns*10, 1))

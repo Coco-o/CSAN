@@ -13,13 +13,14 @@ import matplotlib.gridspec as gridspec
 dim = 784
 ns, nt = 500, 500 # samples per digit
 s_digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-t_digits = [2, 3, 8]
+t_digits = [1]
 ks = len(s_digits)
 kt = len(t_digits)
 
 WRITE_DATA = False
+DO_KMM = False
 data_path = '../datasets/mnist/'
-name = '238'
+name = '1'
 
 
 if WRITE_DATA:
@@ -134,12 +135,12 @@ if __name__ == '__main__':
 
     np.random.seed(0)
 
-    step_num = 25
+    step_num = 10
 
-
-    res3 = np.array(kmm.kmm(xs, xt, kernel.polykernel, kfargs=(1,2 ), B=10)['x']).reshape((ns*10, 1))
-    for i in range(10):
-        print(np.sum(res3[i*ns:i*ns+ns,:]>1)/ns)
+    if DO_KMM:
+        res3 = np.array(kmm.kmm(xs, xt, kernel.polykernel, kfargs=(1,2 ), B=10)['x']).reshape((ns*10, 1))
+        for i in range(10):
+            print(np.sum(res3[i*ns:i*ns+ns,:]>1)/ns)
 
 
 

@@ -13,14 +13,14 @@ import matplotlib.gridspec as gridspec
 dim = 784
 ns, nt = 500, 500 # samples per digit
 s_digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-t_digits = [1]
+t_digits = [2]
 ks = len(s_digits)
 kt = len(t_digits)
 
-WRITE_DATA = False
-DO_KMM = False
+WRITE_DATA = True
+DO_KMM = True
 data_path = '../datasets/mnist/'
-name = '1'
+name = '2'
 
 
 if WRITE_DATA:

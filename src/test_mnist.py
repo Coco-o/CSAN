@@ -131,7 +131,8 @@ model_parameter = {
     'sampler_learning_rate': 0.01,
     'coeff': 1.0,
     'sgd': True,
-    'sampler_batch_size': 1.0/xs.shape[0] #proportion of data_size, 1 means batch training
+    'sampler_batch_size': 1.0/xs.shape[0], #proportion of data_size, 1 means batch training
+    'update_pred_freq': 1 # how many times to update self.pred_s in 1 epoch
 }
 
 

@@ -30,6 +30,7 @@ class AdvSampler(object):
         self.pred_s = 0 # store preditions for source data
         self.pred_a = 0
         self.pred_r = 0
+        self.update_pred_freq = config['update_pred_freq']
         #self.flags = 0 # 0 means source data, 1 means target data
         #self.batch_size
 
@@ -39,7 +40,11 @@ class AdvSampler(object):
         '''
         batch_size = int(x.shape[0] * self.sampler_batch_size // 1)
         rounds = int(x.shape[0] // batch_size)
+        update_rounds = x.shape[0] // (self.update_pred_freq * batch_size)
+        #print(update_rounds)
         for i in range(rounds):
+            if i != 0 and i % update_rounds == 0:
+                self.pred_s = self.sampler.predict(x)
             st, ed = i * batch_size, i * batch_size + batch_size
             self.update_sampler_batch(x[st:ed, :], st, ed)
 
@@ -53,7 +58,7 @@ class AdvSampler(object):
         eps = 10 ** (-8)
         n = x.shape[0]
         accept_prob = self.sampler.predict(x)
-        self.pred_s[st:ed, :] = accept_prob # update predictions
+        #self.pred_s[st:ed, :] = accept_prob # update predictions
         reject_prob = 1 - accept_prob
         # first compute gradient wrt accetance probabilities
         '''

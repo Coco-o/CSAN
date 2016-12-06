@@ -13,9 +13,10 @@ import matplotlib.gridspec as gridspec
 dim = 784
 ns, nt = 500, 500 # samples per digit
 s_digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-t_digits = [3, 4]
+t_digits = [0]
 ks = len(s_digits)
 kt = len(t_digits)
+
 '''
 # load data, 50000, 10000, 10000
 print('Loading data ...',)
@@ -75,13 +76,14 @@ for i in range(10):
     plt.imshow(np.reshape(xt[j,:],(28,28)), cmap='gray', interpolation='none')
     plt.show()
 
+
 #write data
 np.savetxt('data/xs0.csv', xs, delimiter=',', fmt='%.4f')
 np.savetxt('data/ys0.csv', ys, delimiter=',', fmt='%d')
 np.savetxt('data/xt0.csv', xt, delimiter=',', fmt='%.4f')
 np.savetxt('data/yt0.csv', yt, delimiter=',', fmt='%d')
-'''
 
+'''
 # load saved data:
 xs = np.genfromtxt('data/xs0.csv', delimiter=',')
 ys = np.genfromtxt('data/ys0.csv', delimiter=',')
@@ -96,17 +98,17 @@ print(xs.shape, xt.shape, ys.shape, yt.shape)
 
 
 parameter1 = {
-    'layers': [dim, 200, 100, 50, 1],
+    'layers': [dim, 200, 100, 1],
     'activation': 'relu',
     'weight_decay': 0.01
 }
 parameter2 = {
-    'layers': [dim, 200, 100, 50, 1],
+    'layers': [dim, 200, 100, 1],
     'activation': 'relu',
     'weight_decay': 0.01
 }
 parameter3 = {
-    'layers': [dim, 200, 100, 50, 1],
+    'layers': [dim, 200, 100, 1],
     'activation': 'relu',
     'weight_decay': 0.01
 }
@@ -114,11 +116,11 @@ model_parameter = {
     'sampler_parameter': parameter1,
     'adv_acc_parameter': parameter2,
     'adv_rej_parameter': parameter3,
-    'adv_acc_step_num': 1, #if using sgd, set this smaller
+    'adv_acc_step_num': 2, #if using sgd, set this smaller
     'adv_acc_learning_rate': 0.01,
-    'adv_rej_step_num': 1, #if using sgd, set this smaller
+    'adv_rej_step_num': 2, #if using sgd, set this smaller
     'adv_rej_learning_rate': 0.01,
-    'sampler_step_num': 1,
+    'sampler_step_num': 2,
     'sampler_learning_rate': 0.01,
     'coeff': 1.0,
     'sgd': True,
@@ -149,7 +151,7 @@ if __name__ == '__main__':
 
 
 
-'''
+    '''
     model_parameter['coeff'] = 0.0
     sampler = AdvSampler(model_parameter)
     sampler.train(x_tr, x_te, step_num)

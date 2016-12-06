@@ -14,14 +14,14 @@ def kmm_train(xtr, xte, yte, test_labels, kf, kfargs, B):
 
 if __name__ == '__main__':
     test_labels = [1] # Define labels in test set
-    tr_p = 0.01 # Proportion of training data subsampled for compuational simplicity
+    tr_p = 0.1 # Proportion of training data subsampled for compuational simplicity
 
-    mndata = MNIST('../python-mnist/data/')
+    mndata = MNIST('../python-mnist/')
     xtr, ytr = mndata.load_training()
     xte, yte = mndata.load_testing()
     idx_tr = np.where(np.random.rand(len(ytr), 1) < tr_p)[0]
-    [xtr, ytr] = [np.array(xtr)[idx_tr], np.array(ytr)[idx_tr]]
-    [xte, yte] = [np.array(xte), np.array(yte)]
+    [xtr, ytr] = [np.array(xtr)[idx_tr] / 255.0, np.array(ytr)[idx_tr]]
+    [xte, yte] = [np.array(xte) / 255.0, np.array(yte)]
 
     coef = kmm_train(xtr, xte, yte, test_labels, kernel.rbf, (25, ), 10)
 
@@ -30,4 +30,5 @@ if __name__ == '__main__':
         score[i] = np.mean(coef[np.where(ytr == i)])
 
     plt.scatter(ytr, coef)
+    plt.savefig('fig/kmm_mnist.png')
     plt.show()

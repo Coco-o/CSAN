@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from model2 import AdvSampler, WeightedLR
 import kernel, kmm
 import matplotlib.gridspec as gridspec
+from mnist import MNIST
 
 #print(':')
 
@@ -91,30 +92,30 @@ model_parameter = {
     'sampler_learning_rate': 0.1,
     'coeff': 1.0,
     'sgd': True,
-    'sampler_batch_size': 0.1 #proportion of data_size, 1 means batch training
+    'sampler_batch_size': 0.1, #proportion of data_size, 1 means batch training
+    'update_pred_freq': 1 # how many times to update self.pred_s in 1 epoch
 }
 
 
 if __name__ == '__main__':
 
-    np.random.seed(1)
+    np.random.seed(0)
     x_tr, y_tr, x_te, y_te = poly_uniform(300, 100)
     step_num = 25
     lr_rate = 0.1
 
     sampler = AdvSampler(model_parameter)
     log = sampler.train(x_tr, x_te, step_num)
-    plot_log(log, 'figs_new/syn_loss.pdf')
+    plot_log(log, 'figs/syn_loss.pdf')
     res1 = sampler.get_result(x_tr, 'sampler')
     lr = WeightedLR(dim)
     lr.train(x_tr, y_tr, res1, lr_rate)
     lr_loss = lr.get_loss(x_te, y_te, np.ones_like(y_te))
     print(lr_loss)
-    plot_weights(x_tr, y_tr, x_te, y_te, res1.flatten(), lr, 'figs_new/syn1.pdf')
+    plot_weights(x_tr, y_tr, x_te, y_te, res1.flatten(), lr, 'figs/syn1.pdf')
 
 
 
-    '''
     model_parameter['coeff'] = 0.0
     sampler = AdvSampler(model_parameter)
     sampler.train(x_tr, x_te, step_num)
@@ -134,4 +135,3 @@ if __name__ == '__main__':
     lr_loss = lr.get_loss(x_te, y_te, np.ones_like(y_te))
     print(lr_loss)
     plot_weights(x_tr, y_tr, x_te, y_te, coef, lr, 'figs/syn3.pdf')
-    '''

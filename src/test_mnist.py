@@ -8,36 +8,35 @@ import matplotlib.image as mpimg
 from model2 import AdvSampler, WeightedLR
 import kernel, kmm
 import matplotlib.gridspec as gridspec
-#from mnist import MNIST
+from mnist import MNIST
 
 dim = 784
 ns, nt = 500, 500 # samples per digit
 s_digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-t_digits = [2]
+t_digits = [5]
 ks = len(s_digits)
 kt = len(t_digits)
 
 WRITE_DATA = True
 DO_KMM = True
-data_path = '../datasets/mnist/'
-name = '2'
+name = '5'
 
 
 if WRITE_DATA:
     # load data, 50000, 10000, 10000
-    #data_path = '../python-mnist/'
-    #mndata = MNIST(data_path)
-    #x_train, y_train = mndata.load_training()
-    #x_test, y_test = mndata.load_testing()
-    #x_train = np.array(x_train) / 255.0
-    #y_train = np.array(y_train)
-    #x_test = np.array(x_test) / 255.0
-    #y_test = np.array(y_test)
+    data_path = '../python-mnist/'
+    mndata = MNIST(data_path)
+    x_train, y_train = mndata.load_training()
+    x_test, y_test = mndata.load_testing()
+    x_train = np.array(x_train) / 255.0
+    y_train = np.array(y_train)
+    x_test = np.array(x_test) / 255.0
+    y_test = np.array(y_test)
 
-    x_train = np.genfromtxt(data_path+'train_full.images', delimiter=' ') / 255.0
-    x_test = np.genfromtxt(data_path+'test_full.images', delimiter=' ') / 255.0
-    y_train = np.genfromtxt(data_path+'train_full.labels', delimiter=' ').astype(int)
-    y_test = np.genfromtxt(data_path+'test_full.labels', delimiter=' ').astype(int)
+    #x_train = np.genfromtxt(data_path+'train_full.images', delimiter=' ') / 255.0
+    #x_test = np.genfromtxt(data_path+'test_full.images', delimiter=' ') / 255.0
+    #y_train = np.genfromtxt(data_path+'train_full.labels', delimiter=' ').astype(int)
+    #y_test = np.genfromtxt(data_path+'test_full.labels', delimiter=' ').astype(int)
     print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
     idx = np.random.permutation(x_train.shape[0])
     x_train_old, y_train_old = x_train[idx, :], y_train[idx]
@@ -76,10 +75,10 @@ if WRITE_DATA:
         yt[nt*i:nt*(i+1)] = 1
 
     #write data
-    np.savetxt('data/xs'+name+'.csv', xs, delimiter=',', fmt='%.4f')
-    np.savetxt('data/ys'+name+'.csv', ys, delimiter=',', fmt='%d')
-    np.savetxt('data/xt'+name+'.csv', xt, delimiter=',', fmt='%.4f')
-    np.savetxt('data/yt'+name+'.csv', yt, delimiter=',', fmt='%d')
+    np.savetxt('../data/xs'+name+'.csv', xs, delimiter=',', fmt='%.4f')
+    np.savetxt('../data/ys'+name+'.csv', ys, delimiter=',', fmt='%d')
+    np.savetxt('../data/xt'+name+'.csv', xt, delimiter=',', fmt='%.4f')
+    np.savetxt('../data/yt'+name+'.csv', yt, delimiter=',', fmt='%d')
 
 
 
@@ -87,10 +86,10 @@ if WRITE_DATA:
 print('Loading data ...',)
 
 # load saved data:
-xs = np.genfromtxt('data/xs'+name+'.csv', delimiter=',')
-ys = np.genfromtxt('data/ys'+name+'.csv', delimiter=',')
-xt = np.genfromtxt('data/xt'+name+'.csv', delimiter=',')
-yt = np.genfromtxt('data/yt'+name+'.csv', delimiter=',')
+xs = np.genfromtxt('../data/xs'+name+'.csv', delimiter=',')
+ys = np.genfromtxt('../data/ys'+name+'.csv', delimiter=',')
+xt = np.genfromtxt('../data/xt'+name+'.csv', delimiter=',')
+yt = np.genfromtxt('../data/yt'+name+'.csv', delimiter=',')
 print(xs.shape, xt.shape, ys.shape, yt.shape)
 
 
@@ -141,8 +140,7 @@ if __name__ == '__main__':
         res3 = np.array(kmm.kmm(xs, xt, kernel.polykernel, kfargs=(1,2 ), B=10)['x']).reshape((ns*10, 1))
         for i in range(10):
             print(np.sum(res3[i*ns:i*ns+ns,:]>1)/ns)
-
-
+        np.savetxt('../data/kmm_res'+name+'.csv', res3, delimiter=',', fmt='%.4f')
 
     sampler = AdvSampler(model_parameter)
     log = sampler.train(xs, xt, step_num)
@@ -151,10 +149,11 @@ if __name__ == '__main__':
     for i in range(10):
         print(np.sum(res[i*ns:i*ns+ns,:]>0.5)/ns)
         ys[i*ns:i*ns+ns] = i
+        np.savetxt('../data/gan_res'+name+'.csv', res, delimiter=',', fmt='%.4f')
 
-    #plt.scatter(ys, res)
-    #plt.savefig('figs/mnist.png')
-    #plt.show()
+    plt.scatter(ys, res)
+    plt.savefig('figs/mnist.png')
+    plt.show()
 
     '''
     model_parameter['coeff'] = 0.0

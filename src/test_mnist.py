@@ -8,7 +8,7 @@ import matplotlib.image as mpimg
 from model2 import AdvSampler, WeightedLR
 import kernel, kmm
 import matplotlib.gridspec as gridspec
-from mnist import MNIST
+#from mnist import MNIST
 
 dim = 784
 ns, nt = 500, 500 # samples per digit
@@ -107,27 +107,27 @@ print(xs.shape, xt.shape, ys.shape, yt.shape)
 parameter1 = {
     'layers': [dim, 200, 100, 1],
     'activation': 'relu',
-    'weight_decay': 0.01
+    'weight_decay': 0.001
 }
 parameter2 = {
     'layers': [dim, 200, 100, 1],
     'activation': 'relu',
-    'weight_decay': 0.01
+    'weight_decay': 0.001
 }
 parameter3 = {
     'layers': [dim, 200, 100, 1],
     'activation': 'relu',
-    'weight_decay': 0.01
+    'weight_decay': 0.001
 }
 model_parameter = {
     'sampler_parameter': parameter1,
     'adv_acc_parameter': parameter2,
     'adv_rej_parameter': parameter3,
-    'adv_acc_step_num': 2, #if using sgd, set this smaller
+    'adv_acc_step_num': 1, #if using sgd, set this smaller
     'adv_acc_learning_rate': 0.01,
-    'adv_rej_step_num': 2, #if using sgd, set this smaller
+    'adv_rej_step_num': 1, #if using sgd, set this smaller
     'adv_rej_learning_rate': 0.01,
-    'sampler_step_num': 2,
+    'sampler_step_num': 1,
     'sampler_learning_rate': 0.01,
     'coeff': 1.0,
     'sgd': True,
@@ -155,9 +155,9 @@ if __name__ == '__main__':
     for i in range(10):
         print(np.sum(res[i*ns:i*ns+ns,:]>0.5)/ns)
         ys[i*ns:i*ns+ns] = i
-    plt.scatter(ys, res)
-    plt.savefig('figs/mnist.png')
-    plt.show()
+    #plt.scatter(ys, res)
+    #plt.savefig('figs/mnist.png')
+    #plt.show()
 
     '''
     model_parameter['coeff'] = 0.0
